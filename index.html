@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="vue.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- setTimeout directive -->
+      <h1>{{ newUser.name }}</h1>
+      <h1 v-once>{{ newUser.name }}</h1>
+      {{ update() }}
+      <p v-if="checkUser()">Show it</p>
+      <!-- if else if else -->
+      <p v-if="userAge > allowedAge">
+        You are good to go
+      </p>
+      <p v-else-if="user === 'Francis'">
+        You're great
+      </p>
+      <p v-else>
+        You are not allowed
+      </p>
+      <!-- method call -->
+      <p>{{ welcome() }}</p>
+      <!-- basic data calls -->
+      <p>is it true: {{ isItTrue ? 'Yes' : 'No' }}</p>
+      <p>{{ array[1] }}</p>
+      <p>{{ obj.car }}</p>
+      <p>{{ func() }}</p>
+      <!-- v-attributes -->
+      <img v-bind:src="src" v-bind:alt="alt" />
+      <a v-bind:href="link">Go to Google</a>
+      <hr />
+      <p v-text="myText"></p>
+      <hr />
+      <div v-html="myHTML"></div>
+      <!-- alternative if/else - sets display to none -->
+      <p v-show="user === 'Francis'">
+        I am visible!
+      </p>
+      <p v-show="user !== 'Francis'">
+        I am not Francis!
+      </p>
+      <!-- for loops -->
+      <ul>
+        <li v-for="(name, index) in array">{{ index }}: {{ name }}</li>
+      </ul>
+      <ul>
+        <li v-for="(car,index) in cars">
+          {{ index }}: {{ car.brand }} is {{ car.color }}
+        </li>
+      </ul>
+      <ul>
+        <li v-for="(value, key, index) in newUser">
+          {{ index }} - {{ key }} : {{ value }}
+        </li>
+      </ul>
+      <button v-on:click="updateName">Click me!</button>
+      <section class="box" v-on:mousemove="getCoord">Hover me</section>
+      <p>X: {{ x }}</p>
+      <p>Y: {{ y }}</p>
+    </div>
+  </body>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        greeting: 'Hello guys',
+        isItTrue: true,
+        array: ['Francis', 'Jane', 'Bob', 'Buddy', 'Guy', 'Friend', 'Pal'],
+        obj: {
+          car: 'Ferrari'
+        },
+        func: () => {
+          return 'Message from function';
+        },
+        src: 'https://picsum.photos/200',
+        alt: 'Image',
+        link: 'http://google.com',
+        myText: 'Hello again',
+        myHTML: '<strong>Francis Drake</strong>',
+        userAge: 15,
+        allowedAge: 18,
+        user: 'Francis',
+        cars: [
+          {
+            brand: 'Ferrari',
+            color: 'Red'
+          },
+          {
+            brand: 'Ford',
+            color: 'Teal'
+          },
+          {
+            brand: 'Kia',
+            color: 'Purple'
+          }
+        ],
+        newUser: {
+          name: 'Frank',
+          lastName: 'The Man',
+          age: 300
+        },
+        x: 0,
+        y: 0
+      },
+      methods: {
+        welcome() {
+          return this.greeting;
+        },
+        checkUser() {
+          return this.user === 'Francis' ? true : false;
+        },
+        update() {
+          setTimeout(() => {
+            this.newUser.name = 'Bob';
+          }, 2000);
+        },
+        updateName() {
+          this.newUser.name = 'Lina';
+        },
+        getCoord(e) {
+          this.x = e.clientX;
+          this.y = e.clientY;
+        }
+      }
+    });
+  </script>
+  <style>
+    .box {
+      background: red;
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</html>
