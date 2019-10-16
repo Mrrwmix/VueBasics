@@ -12,7 +12,7 @@
       <!-- setTimeout directive -->
       <h1>{{ newUser.name }}</h1>
       <h1 v-once>{{ newUser.name }}</h1>
-      {{ update() }}
+      <!-- {{ update() }} -->
       <p v-if="checkUser()">Show it</p>
       <!-- if else if else -->
       <p v-if="userAge > allowedAge">
@@ -59,10 +59,35 @@
           {{ index }} - {{ key }} : {{ value }}
         </li>
       </ul>
-      <button v-on:click="updateName">Click me!</button>
+      <!-- v-on with events and modifiers -->
+      <button v-on:click.right="updateName('Buddy', $event)">
+        Right Click me!
+      </button>
       <section class="box" v-on:mousemove="getCoord">Hover me</section>
       <p>X: {{ x }}</p>
       <p>Y: {{ y }}</p>
+
+      <form v-on:submit.prevent="handleForm">
+        <input />
+        <button type="submit">Submit</button>
+      </form>
+      <!-- chained on key up modifiers -->
+      <input
+        type="text"
+        v-on:keyup.space.enter="showEvent"
+        placeholder="console logging"
+      />
+      <!-- using v-models like react state with forms -->
+      <form v-on:submit.prevent="formHandler">
+        <label for="first">First Name</label>
+        <input type="text" v-model.trim.lazy="formData.first" />
+        <hr />
+        <label for="last">Last Name</label>
+        <input type="text" v-model.trim.lazy="formData.last" />
+        <label for="age">Age</label>
+        <input type="text" v-model.number="formData.age" />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   </body>
   <script>
@@ -106,7 +131,12 @@
           age: 300
         },
         x: 0,
-        y: 0
+        y: 0,
+        formData: {
+          first: '',
+          last: '',
+          age: ''
+        }
       },
       methods: {
         welcome() {
@@ -120,12 +150,21 @@
             this.newUser.name = 'Bob';
           }, 2000);
         },
-        updateName() {
-          this.newUser.name = 'Lina';
+        updateName(newName, e) {
+          this.newUser.name = newName;
         },
         getCoord(e) {
           this.x = e.clientX;
           this.y = e.clientY;
+        },
+        handleForm() {
+          this.newUser.name = 'Bobby Drake';
+        },
+        showEvent(e) {
+          console.log(e.target.value);
+        },
+        formHandler() {
+          console.log(this.formData);
         }
       }
     });
