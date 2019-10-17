@@ -88,10 +88,57 @@
         <input type="text" v-model.number="formData.age" />
         <button type="submit">Submit</button>
       </form>
+
+      <!-- Dynamically changing classes and styling -->
+
+      <!-- <div
+        class="element"
+        v-bind:class="[colors.redClass.active ? colors.redClass.name : '']"
+        v-on:click="colors.redClass.active = !colors.redClass.active, newStyle.fontSize = '50px'"
+        v-bind:style="newStyle"
+      >
+        This is my content
+      </div> -->
+
+      <div
+        class="element"
+        v-bind:class="colorStyle"
+        v-on:click="colorStyle = 'red'"
+      >
+        This is my content
+      </div>
+
+      <!-- watchers and computed properties -->
+
+      <input v-model="user" />
+      <button v-on:click="toggleActive">Other action</button>
+      <hr />
+      <div>Name: {{ compMessage }}</div>
+      <div>Active: {{ isActive() }}</div>
+      <div>Loading: {{ loading }}</div>
+
+      <!-- shorthand (v-on: = @ && v-bind = :) -->
+
+      <button @click="alertSomething">Alert something</button>
+      <hr />
+      <a :href="link">Hello</a>
+      <hr />
+      <input type="text" v-model="user" />
+
+      <!-- accessing another Vue instance property -->
+      <button @click="changeValue">Change</button>
+      <hr />
+      <div ref="title">Hello</div>
     </div>
+    <div id="app2">
+      <div>Instance two: {{ value }}</div>
+      <button @click="saySomething">Alert</button>
+    </div>
+
+    <div id="app3"></div>
   </body>
   <script>
-    new Vue({
+    const app1 = new Vue({
       el: '#app',
       data: {
         greeting: 'Hello guys',
@@ -136,6 +183,26 @@
           first: '',
           last: '',
           age: ''
+        },
+        colors: { redClass: { name: 'red', active: true } },
+        newStyle: { fontSize: '20px', border: '5px solid green' },
+        colorStyle: 'blue',
+        active: false,
+        loading: false
+      },
+      watch: {
+        // allows async code
+        active(value) {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+          }, 3000);
+        }
+      },
+      computed: {
+        // only synchronous code
+        compMessage() {
+          return this.user === 'Francis' ? 'Welcome' : 'Not allowed';
         }
       },
       methods: {
@@ -165,15 +232,68 @@
         },
         formHandler() {
           console.log(this.formData);
+        },
+        isActive() {
+          return this.active ? 'Active' : 'Not active';
+        },
+        toggleActive() {
+          this.active = this.active ? false : true;
+        },
+        alertSomething() {
+          alert('Hello world');
+        },
+        changeValue() {
+          app2.value = 'The value changed';
+          this.$refs.title.style.color = 'red';
+          this.$refs.title.style.fontSize = '50px';
         }
       }
     });
+
+    let messaged = 'Hey you guys!';
+
+    const app2 = new Vue({
+      el: '#app2',
+      data: {
+        value: 'Instance two working!'
+      },
+      methods: {
+        saySomething() {
+          alert(messaged);
+        }
+      }
+    });
+
+    const app3 = new Vue({
+      data: {
+        value: "I've mounted!"
+      },
+      template: `<p>{{ value }}</p>`
+    });
+
+    setTimeout(() => {
+      app3.$mount('#app3');
+    }, 2000);
   </script>
   <style>
     .box {
       background: red;
       width: 200px;
       height: 200px;
+    }
+    .element {
+      color: white;
+      background: black;
+      padding: 10px;
+    }
+    .red {
+      background: red;
+    }
+    .blue {
+      background: blue;
+    }
+    .green {
+      background: green;
     }
   </style>
 </html>
