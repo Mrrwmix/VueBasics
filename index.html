@@ -134,8 +134,17 @@
       <div>Instance two: {{ value }}</div>
       <button @click="saySomething">Alert</button>
     </div>
-
+    <!-- template -->
     <div id="app3"></div>
+    <div id="app4">
+      <!-- component -->
+      <name></name>
+      <name></name>
+      <!-- Lifecycle methods -->
+      <div>{{ name }}</div>
+      <button @click="updateName">Update name</button>
+      <button @click="killit">Destroy</button>
+    </div>
   </body>
   <script>
     const app1 = new Vue({
@@ -274,6 +283,61 @@
     setTimeout(() => {
       app3.$mount('#app3');
     }, 2000);
+
+    Vue.component('name', {
+      data() {
+        return { name: 'Bob' };
+      },
+      methods: {
+        alertSomething() {
+          alert('Hello there!!');
+        }
+      },
+      template: `<div>
+        <div>{{name}}</div>
+        <button @click="alertSomething">Alert something</button>
+      </div>
+      `
+    });
+
+    const app4 = new Vue({
+      el: '#app4',
+      data: {
+        name: 'Francis'
+      },
+      methods: {
+        updateName() {
+          this.name = 'Bobby Drake';
+        },
+        killit() {
+          this.$destroy();
+        }
+      },
+      beforeCreate() {
+        console.log('Running before create');
+      },
+      created() {
+        console.log('Running when created');
+      },
+      beforeMount() {
+        console.log('Running before mount');
+      },
+      mounted() {
+        console.log('Running mounted');
+      },
+      beforeUpdate() {
+        console.log('Running before update');
+      },
+      updated() {
+        console.log('Running after updated');
+      },
+      beforeDestroy() {
+        console.log('Before destroy');
+      },
+      destroyed() {
+        console.log('destroyed');
+      }
+    });
   </script>
   <style>
     .box {
